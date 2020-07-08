@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,14 +19,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-    private Button btnStart;
-    private String[] iqTest;
+    private JSONObject testQuestions;
+    private int counter = 0;
+    private JSONArray questionArray;
+
     FetchPageTask task = null;
+    private Button btnStart;
+    private TextView tvSummary;
+
 
     private class FetchPageTask extends AsyncTask<String, Integer, String>{
-
         @Override
         protected String doInBackground(String... values) {
             InputStream inputStream = null;
@@ -34,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
             try{
                 url = new URL(values[0]);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
                 con.setRequestMethod("GET");
                 con.connect();
 
@@ -50,51 +56,84 @@ public class MainActivity extends AppCompatActivity {
             return result;
         }
 
+
         protected void onPostExecute(String result){
             try{
                 JSONObject jObj = new JSONObject(result);
+                questionArray = jObj.getJSONArray("questions");
 
-                int qNum = jObj.getJSONArray("questions").length();
-                JSONArray questions = jObj.getJSONArray("questions");
-
-                int index = 0;
-
-
-
+                JSONObject randomQuestionObj = questionArray.getJSONObject(new Random().nextInt(10-1) + 1);
+                String randomQuestion = randomQuestionObj.getString("question");
             } catch(Exception e){ }
+        }
+}
+    //Menu
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    private void startTest(){
+        try{
+           // int totalQuestionNum = questionArray.length();
+            int randomN = new Random().nextInt(questionArray.length());
+
+            String randomQuestion =  questionArray.getJSONObject(randomN).getString("question");
+            String answer = "";
+
+
+        Intent i = new Intent(this, QuestionActivity.class);
+        i.putExtra("question",randomQuestion);
+        i.putExtra("answer", answer);
+
+        startActivityForResult(i, 777);
+
+        questionArray.remove(randomN);
+        counter++;
+        }catch(Exception e){}
+
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == 777){
+            if (counter < 5){
+                startTest();
+                // Update log
+                // Update log
+                // Update log
+                // Update log
+            } else{
+                Intent i = new Intent(this, MainActivity.class);
+                /* Show resultttttt
+                tvSummary.setText();
+
+                 */
+            }
         }
     }
 
-
-    public void setTest(int index){
-        Intent i = new Intent(getApplicationContext(), QuestionActivity.class);
-        i.putExtra("question", )
-
-        startActivityForResult();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnStart = findViewById(R.id.btnStart);
-        btnStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), QuestionActivity.class);
-                startActivity(i);
-            }
-        });
+        tvSummary = findViewById(R.id.tvSummary);
 
         if (task == null || task.getStatus().equals((AsyncTask.Status.FINISHED))){
             task = new FetchPageTask();
             task.execute("https://ajtdbwbzhh.execute-api.us-east-1.amazonaws.com/default/201920ITP4501Assignment");
         }
+
+        btnStart = findViewById(R.id.btnStart);
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTest();
+            }
+        });
+
+
     }
 
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
 }

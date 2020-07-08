@@ -14,24 +14,32 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/q1"
+            android:id="@+id/A"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="2.5"/>
 
         <RadioButton
-            android:id="@+id/q2"
+            android:id="@+id/B"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="2.5"/>
 
         <RadioButton
-            android:id="@+id/q3"
+            android:id="@+id/C"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="2.5"/>
 
         <RadioButton
-            android:id="@+id/q4"
+            android:id="@+id/D"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="2.5"/>
 
     </RadioGroup>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Next" />
 </LinearLayout>
