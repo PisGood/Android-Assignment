@@ -12,6 +12,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.Time;
 import java.util.Random;
 
 public class QuestionActivity extends AppCompatActivity {
@@ -19,6 +20,9 @@ public class QuestionActivity extends AppCompatActivity {
     RadioButton rbA, rbB, rbC, rbD;
     Button btnCheck, btnNext;
     TextView tvQuestion;
+    Time now;
+    String starttime;
+    String endtime;
 
     boolean isCorrect = false;
 
@@ -35,14 +39,14 @@ public class QuestionActivity extends AppCompatActivity {
         rbD = findViewById(R.id.D);
         btnCheck = findViewById(R.id.btnCheck);
         btnNext = findViewById(R.id.btnNext);
+        now.setToNow();
 
-
+        //Get String Extra from intent
         String question = getIntent().getStringExtra("question");
         final String answer = getIntent().getStringExtra("answer");
-
+        //Set Text: Question & Answer
         tvQuestion.setText(question);
         int correctQ = new Random().nextInt(3);
-
         switch (correctQ){
             case 0:
                 rbA.setText(getIntent().getStringExtra("answer"));
@@ -73,11 +77,7 @@ public class QuestionActivity extends AppCompatActivity {
                 break;
         }
 
-
-
-
-
-
+        //Check answer
         btnCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,12 +104,13 @@ public class QuestionActivity extends AppCompatActivity {
                 }
             }
         });
-
+        //Send back result & call startTest()
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent data = new Intent();
                 data.putExtra("result", isCorrect);
+                data.putExtra("testDate", new Time().set)
                 setResult(RESULT_OK, data);
                 finish();
             }

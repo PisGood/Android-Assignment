@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btnStart;
     private TextView tvSummary;
 
+    DbHelper dbHelper;
+    SQLiteDatabase db;
 
     private class FetchPageTask extends AsyncTask<String, Integer, String>{
         @Override
@@ -100,20 +102,11 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 777){
             boolean result = data.getExtras().getBoolean("result");
-
-            //Insert data to database
-
-
             if (counter < 5){
                 startTest();
-                // Update log
-                // Update log
-                // Update log
-                // Update log
-            } else{
-                /* Update record
 
-                 */
+            } else{
+
             }
         }
     }
@@ -124,22 +117,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Find view
         tvSummary = findViewById(R.id.tvSummary);
+        btnStart = findViewById(R.id.btnStart);
 
+        // Insert record
+        dbHelper = new DbHelper(this);
+        db = dbHelper.getWritableDatabase();
+
+        //Get Json from url
         if (task == null || task.getStatus().equals((AsyncTask.Status.FINISHED))){
             task = new FetchPageTask();
             task.execute("https://ajtdbwbzhh.execute-api.us-east-1.amazonaws.com/default/201920ITP4501Assignment");
         }
 
-        btnStart = findViewById(R.id.btnStart);
+
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startTest();
             }
         });
-        // Insert record
-        //......
+
+
 
     }
 
