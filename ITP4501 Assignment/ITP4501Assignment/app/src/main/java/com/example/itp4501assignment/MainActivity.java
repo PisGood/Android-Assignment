@@ -3,6 +3,8 @@ package com.example.itp4501assignment;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,6 +24,7 @@ import java.net.URL;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+
     private JSONObject testQuestions;
     private int counter = 0;
     private JSONArray questionArray;
@@ -79,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             int randomN = new Random().nextInt(questionArray.length());
 
             String randomQuestion =  questionArray.getJSONObject(randomN).getString("question");
-            String answer = "";
+            String answer = questionArray.getJSONObject(randomN).getString("answer");
 
 
         Intent i = new Intent(this, QuestionActivity.class);
@@ -96,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 777){
+            boolean result = data.getExtras().getBoolean("result");
+
+            //Insert data to database
+
+
             if (counter < 5){
                 startTest();
                 // Update log
@@ -103,9 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 // Update log
                 // Update log
             } else{
-                Intent i = new Intent(this, MainActivity.class);
-                /* Show resultttttt
-                tvSummary.setText();
+                /* Update record
 
                  */
             }
@@ -132,7 +138,8 @@ public class MainActivity extends AppCompatActivity {
                 startTest();
             }
         });
-
+        // Insert record
+        //......
 
     }
 

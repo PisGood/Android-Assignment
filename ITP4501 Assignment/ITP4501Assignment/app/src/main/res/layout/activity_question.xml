@@ -9,6 +9,7 @@
     android:layout_height="wrap_content" />
 
     <RadioGroup
+        android:id="@+id/rgAnswer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -39,6 +40,12 @@
 
     </RadioGroup>
     <Button
+        android:id="@+id/btnCheck"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Check" />
+    <Button
+        android:id="@+id/btnNext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Next" />
