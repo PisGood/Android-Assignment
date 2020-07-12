@@ -4,7 +4,7 @@
         android:id="@+id/about"
         android:title="About" />
     <item
-        android:id="@+id/tes_logt"
+        android:id="@+id/test_log"
         android:title="Test Log" />
     <item
         android:id="@+id/exit"

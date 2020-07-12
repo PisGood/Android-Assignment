@@ -13,16 +13,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.Time;
+import java.util.Calendar;
 import java.util.Random;
 
 public class QuestionActivity extends AppCompatActivity {
     RadioGroup rgAnswer;
     RadioButton rbA, rbB, rbC, rbD;
     Button btnCheck, btnNext;
-    TextView tvQuestion;
-    Time now;
-    String starttime;
-    String endtime;
+    TextView tvQuestion, tvProgress;
+    static int qNum;
+
+    long startTime;
+    long endTime;
 
     boolean isCorrect = false;
 
@@ -39,7 +41,20 @@ public class QuestionActivity extends AppCompatActivity {
         rbD = findViewById(R.id.D);
         btnCheck = findViewById(R.id.btnCheck);
         btnNext = findViewById(R.id.btnNext);
-        now.setToNow();
+        btnNext.setEnabled(false);
+        tvProgress = findViewById(R.id.progress);
+        startTime = Calendar.getInstance().getTimeInMillis();
+        qNum++;
+
+        //State the current question no.
+        int qRemain = 5 - qNum;
+        String msg = "You are on Q" + qNum + ".\n " + qRemain + " more to go.";
+        if (qNum == 5){
+            msg = "Final Question!";
+            qNum = 0;
+        }
+        tvProgress.setText(msg);
+
 
         //Get String Extra from intent
         String question = getIntent().getStringExtra("question");
@@ -89,6 +104,8 @@ public class QuestionActivity extends AppCompatActivity {
                 rbC.setTextColor(Color.BLACK);
                 rbD.setTextColor(Color.BLACK);
 
+                btnNext.setEnabled(true);
+                btnCheck.setEnabled(false);
                 //Change Text Color & update result
                 if (((RadioButton)findViewById(selectedRb)).getText().toString().equals(answer)){
                     isCorrect = true;
@@ -108,9 +125,12 @@ public class QuestionActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                endTime = Calendar.getInstance().getTimeInMillis();
+                long duration = endTime - startTime;
                 Intent data = new Intent();
+                data.putExtra("duration", duration);
                 data.putExtra("result", isCorrect);
-                data.putExtra("testDate", new Time().set)
+                data.putExtra("testDate", duration * 1000);
                 setResult(RESULT_OK, data);
                 finish();
             }
