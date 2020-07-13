@@ -22,11 +22,11 @@ public class QuestionActivity extends AppCompatActivity {
     Button btnCheck, btnNext;
     TextView tvQuestion, tvProgress;
     static int qNum;
-
     long startTime;
     long endTime;
-
     boolean isCorrect = false;
+    Intent data;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class QuestionActivity extends AppCompatActivity {
         startTime = Calendar.getInstance().getTimeInMillis();
         qNum++;
 
-        //State the current question no.
+        //State the current question no. in textview
         int qRemain = 5 - qNum;
         String msg = "You are on Q" + qNum + ".\n " + qRemain + " more to go.";
         if (qNum == 5){
@@ -97,17 +97,19 @@ public class QuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                int selectedRb = rgAnswer.getCheckedRadioButtonId();
-
                 rbA.setTextColor(Color.BLACK);
                 rbB.setTextColor(Color.BLACK);
                 rbC.setTextColor(Color.BLACK);
                 rbD.setTextColor(Color.BLACK);
 
+                //Disable "Check" button & enable "Next" button
                 btnNext.setEnabled(true);
                 btnCheck.setEnabled(false);
+
                 //Change Text Color & update result
-                if (((RadioButton)findViewById(selectedRb)).getText().toString().equals(answer)){
+                int selectedRb = rgAnswer.getCheckedRadioButtonId();
+                String selectedAns = ((RadioButton)findViewById(selectedRb)).getText().toString();
+                if (selectedAns.equals(answer)){
                     isCorrect = true;
                     ((RadioButton)findViewById(selectedRb)).setTextColor(Color.GREEN);
                     Toast.makeText(QuestionActivity.this, "Correct", Toast.LENGTH_SHORT).show();
@@ -119,6 +121,15 @@ public class QuestionActivity extends AppCompatActivity {
                 for (int i = 0; i < rgAnswer.getChildCount(); i++) {
                     rgAnswer.getChildAt(i).setEnabled(false);
                 }
+                //Put extra for Question Log --> questionNo, question, yourAnswer, isCorrect
+                Intent data = new Intent();
+
+                data.putExtra("questionNum", getIntent().getExtras().getInt("randomNum"));
+                data.putExtra("questionNum", getIntent().getExtras().getInt("randomNum"));
+                data.putExtra("askedQuestion", getIntent().getStringExtra("question"));
+                data.putExtra("selectedAnswer", selectedAns);
+                data.putExtra("isCorrect", isCorrect);
+
             }
         });
         //Send back result & call startTest()
@@ -127,10 +138,12 @@ public class QuestionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 endTime = Calendar.getInstance().getTimeInMillis();
                 long duration = endTime - startTime;
-                Intent data = new Intent();
+
+                //Put extra for Test Log --> duration, result, testDate
                 data.putExtra("duration", duration);
                 data.putExtra("result", isCorrect);
                 data.putExtra("testDate", duration * 1000);
+
                 setResult(RESULT_OK, data);
                 finish();
             }

@@ -53,6 +53,7 @@
         android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="150dp"/>
+        android:layout_gravity="center"
+        android:layout_marginTop="150dp"
+        android:textSize="25dp" />
 </LinearLayout>

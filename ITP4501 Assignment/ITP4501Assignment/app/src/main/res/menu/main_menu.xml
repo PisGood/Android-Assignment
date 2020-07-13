@@ -3,9 +3,18 @@
     <item
         android:id="@+id/about"
         android:title="About" />
+
+    <item android:id ="@+id/barChart"
+        android:title="Bar Chart" />
+
+
     <item
         android:id="@+id/test_log"
         android:title="Test Log" />
+
+    <item android:id ="@+id/question_log"
+        android:title="Question Log" />
+
     <item
         android:id="@+id/exit"
         android:title="Exit" />

@@ -98,8 +98,17 @@ public class MainActivity extends AppCompatActivity {
                 i = new Intent(this, ShowTestLog.class);
                 startActivity(i);
                 return true;
+            case R.id.question_log:
+                i = new Intent(this, ShowTestLog.class);
+                startActivity(i);
+                return true;
+
+
             case R.id.exit:
                 this.finish();
+            case R.id.barChart:
+                i = new Intent(this, BarChart.class);
+                return true;
             default:
                 return super.onOptionsItemSelected (item);
         }
@@ -116,14 +125,14 @@ public class MainActivity extends AppCompatActivity {
             String randomQuestion =  questionArray.getJSONObject(randomN).getString("question");
             String answer = questionArray.getJSONObject(randomN).getString("answer");
 
+            Intent i = new Intent(this, QuestionActivity.class);
+            i.putExtra("question",randomQuestion);
+            i.putExtra("answer", answer);
+            i.putExtra("randomNum",randomN);
 
-        Intent i = new Intent(this, QuestionActivity.class);
-        i.putExtra("question",randomQuestion);
-        i.putExtra("answer", answer);
-
-        startActivityForResult(i, 777);
-
-        questionArray.remove(randomN);
+            startActivityForResult(i, 777);
+            //Remove asked question
+            questionArray.remove(randomN);
 
         }catch(Exception e){}
 
@@ -151,14 +160,10 @@ public class MainActivity extends AppCompatActivity {
 
                 startTest();
             } else{
-                //Insert record to DB
-                //Date & Time
+                //Insert Test Log to DB --> Date, Time, Duration, Correct count
                 Date date = new Date();
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
-
-                //Duration
-
 
                 ContentValues values = new ContentValues();
                 values.put(TestLog.TestLogEntry.COLUMN_NAME_TESTDATE, dateFormat.format(date));
