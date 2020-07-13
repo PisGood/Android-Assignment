@@ -99,16 +99,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
                 return true;
             case R.id.question_log:
-                i = new Intent(this, ShowTestLog.class);
+                i = new Intent(this, ShowQuestionLog.class);
                 startActivity(i);
                 return true;
-
-
-            case R.id.exit:
-                this.finish();
             case R.id.barChart:
                 i = new Intent(this, BarChart.class);
                 return true;
+            case R.id.exit:
+                this.finish();
             default:
                 return super.onOptionsItemSelected (item);
         }
@@ -155,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("extra", "onActivityResult: duration" + " += " + data.getExtras().getLong("duration"));
 
                 //Update correctCount
-                correctCount += data.getExtras().getBoolean("result")? 1:0;
+                correctCount += result? 1:0;
                 Log.d("extra", "onActivityResult: Correct Count + 1? "+ correctCount);
 
                 startTest();

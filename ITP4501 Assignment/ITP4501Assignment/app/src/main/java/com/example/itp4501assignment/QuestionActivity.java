@@ -2,7 +2,9 @@ package com.example.itp4501assignment;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +28,9 @@ public class QuestionActivity extends AppCompatActivity {
     long endTime;
     boolean isCorrect = false;
     Intent data;
-
+    DbHelper dbHelper;
+    SQLiteDatabase db;
+    String question;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +44,16 @@ public class QuestionActivity extends AppCompatActivity {
         rbC = findViewById(R.id.C);
         rbD = findViewById(R.id.D);
         btnCheck = findViewById(R.id.btnCheck);
+        btnCheck.setEnabled(false);
         btnNext = findViewById(R.id.btnNext);
         btnNext.setEnabled(false);
         tvProgress = findViewById(R.id.progress);
         startTime = Calendar.getInstance().getTimeInMillis();
         qNum++;
+        dbHelper = new DbHelper(this);
+        db = dbHelper.getWritableDatabase();
+
+
 
         //State the current question no. in textview
         int qRemain = 5 - qNum;
@@ -55,10 +64,17 @@ public class QuestionActivity extends AppCompatActivity {
         }
         tvProgress.setText(msg);
 
-
         //Get String Extra from intent
-        String question = getIntent().getStringExtra("question");
+        question = getIntent().getStringExtra("question");
         final String answer = getIntent().getStringExtra("answer");
+
+        rgAnswer.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                btnCheck.setEnabled(true);
+            }
+        });
+
         //Set Text: Question & Answer
         tvQuestion.setText(question);
         int correctQ = new Random().nextInt(3);
@@ -90,7 +106,10 @@ public class QuestionActivity extends AppCompatActivity {
                 rbC.setText(String.valueOf(new Random().nextInt(Integer.parseInt(answer) - 1)));
                 rbA.setText(String.valueOf(new Random().nextInt(Integer.parseInt(answer) - 1)));
                 break;
+
         }
+
+
 
         //Check answer
         btnCheck.setOnClickListener(new View.OnClickListener() {
@@ -121,14 +140,16 @@ public class QuestionActivity extends AppCompatActivity {
                 for (int i = 0; i < rgAnswer.getChildCount(); i++) {
                     rgAnswer.getChildAt(i).setEnabled(false);
                 }
-                //Put extra for Question Log --> questionNo, question, yourAnswer, isCorrect
-                Intent data = new Intent();
 
-                data.putExtra("questionNum", getIntent().getExtras().getInt("randomNum"));
-                data.putExtra("questionNum", getIntent().getExtras().getInt("randomNum"));
-                data.putExtra("askedQuestion", getIntent().getStringExtra("question"));
-                data.putExtra("selectedAnswer", selectedAns);
-                data.putExtra("isCorrect", isCorrect);
+
+                ContentValues values = new ContentValues();
+
+                values.put(QuestionsLog.QuestionsLogEntry.COLUMN_NAME_QUESTION, question);
+                values.put(QuestionsLog.QuestionsLogEntry.COLUMN_NAME_YOURANSWER,selectedAns);
+                values.put(QuestionsLog.QuestionsLogEntry.COLUMN_NAME_ISCORRECT, isCorrect);
+
+                db.insert(QuestionsLog.QuestionsLogEntry.TABLE_NAME, null,values);
+
 
             }
         });
@@ -139,10 +160,12 @@ public class QuestionActivity extends AppCompatActivity {
                 endTime = Calendar.getInstance().getTimeInMillis();
                 long duration = endTime - startTime;
 
+
+                data = new Intent();
                 //Put extra for Test Log --> duration, result, testDate
                 data.putExtra("duration", duration);
                 data.putExtra("result", isCorrect);
-                data.putExtra("testDate", duration * 1000);
+
 
                 setResult(RESULT_OK, data);
                 finish();

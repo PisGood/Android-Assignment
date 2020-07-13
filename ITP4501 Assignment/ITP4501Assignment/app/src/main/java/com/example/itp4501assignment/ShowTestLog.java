@@ -27,7 +27,7 @@ public class ShowTestLog extends AppCompatActivity {
 
 
 
-        //Get data from db
+        //Get Test Log from db
         dbHelper = new DbHelper(this);
         db = dbHelper.getReadableDatabase();
 
